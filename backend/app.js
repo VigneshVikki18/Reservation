@@ -11,7 +11,7 @@ dotenv.config();
 
 app.use(
   cors({
-    origin: "https://symphonious-cuchufli-ce445d.netlify.app",
+    origin: "https://super-twilight-f747e9.netlify.app",
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
