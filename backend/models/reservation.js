@@ -11,7 +11,7 @@ const reservationSchema = new mongoose.Schema({
   lastName: {
     type: String,
     required: true,
-    minLength: [3, "Last name must be of at least 3 Characters."],
+    minLength: [1, "Last name must be of at least 1 Characters."],
     maxLength: [30, "Last name cannot exceed 30 Characters."],
   },
   date: {
@@ -30,8 +30,8 @@ const reservationSchema = new mongoose.Schema({
   phone: {
     type: String,
     required: true,
-    minLength: [11, "Phone number must contain 11 Digits."],
-    maxLength: [11, "Phone number must contain 11 Digits."],
+    minLength: [10, "Phone number must contain 10 Digits."],
+    maxLength: [10, "Phone number must contain 10 Digits."],
   },
 });
 

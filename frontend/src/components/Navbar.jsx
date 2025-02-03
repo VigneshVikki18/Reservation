@@ -17,8 +17,8 @@ const Navbar = () => {
                 smooth={true}
                 duration={500}
                 key={element.id}
-              >
-                {element.title}
+               >
+                {element.title} 
               </Link>
             ))}
           </div>
