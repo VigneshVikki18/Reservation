@@ -19,7 +19,7 @@ const Signup = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/api/v1/auth/signup", {
+      const response = await fetch("https://reservation-nbg6.onrender.com/api/v1/auth/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
