@@ -88,6 +88,7 @@ const Login = () => {
         </div>
       ) : (
         <> 
+        
         <HeroSection/>
           <About />
           <Qualities/>
