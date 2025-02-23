@@ -7,6 +7,7 @@ import Success from './Pages/Success/Success';
 import './App.css'
 import Login from './Pages/Login/Login';
 import Signup from './Pages/Signup/Signup';
+import AdminDashboard from './components/AdminDashboard';
 const App = () => {
   return (
     <>
@@ -16,6 +17,7 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path='/success' element={<Success/>}/>
+        <Route path='/admin' element={<AdminDashboard/>}/>
         <Route path='*' element={<NotFound/>}/> 
        
         </Routes>

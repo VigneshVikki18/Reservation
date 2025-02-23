@@ -12,14 +12,12 @@ const reviewSchema = new mongoose.Schema({
     max: 5,
   },
   restaurantId: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Number,
     required: true,
-    ref: 'Restaurant',
+    
   },
 }, {
   timestamps: true,
 });
 
-const Review = mongoose.model('Review', reviewSchema);
-
-export default Review;
+export const Review = mongoose.model('Review', reviewSchema);

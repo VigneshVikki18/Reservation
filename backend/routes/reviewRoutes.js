@@ -1,9 +1,9 @@
-const express = require('express');
-const { createReview, getReviews, updateReview, deleteReview } = require('../controller/reviewController');
+import express from "express"
+import { createReview, getReviews, updateReview, deleteReview } from '../controller/reviewController'
 
 const router = express.Router();
 
-// Route to create a new review
+// Route to create a new review 
 router.post('/', createReview);
 
 // Route to get all reviews for a specific restaurant

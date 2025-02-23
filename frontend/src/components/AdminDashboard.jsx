@@ -15,11 +15,15 @@ const AdminDashboard = () => {
   const [reservations, setReservations] = useState([]);
   const [loadingReservations, setLoadingReservations] = useState(true);
 
+  // State for Reviews
+  const [reviews, setReviews] = useState([]);
+  const [loadingReviews, setLoadingReviews] = useState(true);
+
   // Fetch Restaurants from API
   useEffect(() => {
     const fetchRestaurants = async () => {
       try {
-        const { data } = await axios.get("https://reservation-nbg6.onrender.com/api/v1/restaurant/all");
+        const { data } = await axios.get("http://localhost:5000/api/v1/restaurant/all");
         setRestaurants(data.restaurants);
       } catch (error) {
         toast.error("Failed to fetch restaurants");
@@ -34,7 +38,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchReservations = async () => {
       try {
-        const { data } = await axios.get("https://reservation-nbg6.onrender.com/api/v1/reservation/all");
+        const { data } = await axios.get("http://localhost:5000/api/v1/reservation/all");
         setReservations(data.reservations);
       } catch (error) {
         toast.error("Failed to fetch reservations");
@@ -43,6 +47,21 @@ const AdminDashboard = () => {
       }
     };
     fetchReservations();
+  }, []);
+
+  // Fetch Reviews from API
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const { data } = await axios.get("http://localhost:5000/api/v1/review/all");
+        setReviews(data.reviews);
+      } catch (error) {
+        toast.error("Failed to fetch reviews");
+      } finally {
+        setLoadingReviews(false);
+      }
+    };
+    fetchReviews();
   }, []);
 
   // Add New Restaurant (API Integration)
@@ -54,7 +73,7 @@ const AdminDashboard = () => {
     
     try {
       const { data } = await axios.post(
-        "https://reservation-nbg6.onrender.com/api/v1/restaurant/create",
+        "http://localhost:5000/api/v1/restaurant/create",
         newRestaurant,
         { headers: { "Content-Type": "application/json" } }
       );
@@ -69,7 +88,7 @@ const AdminDashboard = () => {
   // Delete a Restaurant (API Integration)
   const handleDeleteRestaurant = async (id) => {
     try {
-      await axios.delete(`https://reservation-nbg6.onrender.com/api/v1/restaurant/delete/${id}`);
+      await axios.delete(`http://localhost:5000/api/v1/restaurant/delete/${id}`);
       setRestaurants(restaurants.filter((restaurant) => restaurant.id !== id));
       toast.success("Restaurant deleted");
     } catch (error) {
@@ -80,7 +99,7 @@ const AdminDashboard = () => {
   // Delete a Reservation (API Integration)
   const handleDeleteReservation = async (id) => {
     try {
-      await axios.delete(`https://reservation-nbg6.onrender.com/api/v1/reservation/delete/${id}`);
+      await axios.delete(`http://localhost:5000/api/v1/reservation/delete/${id}`);
       setReservations(reservations.filter((res) => res.id !== id));
       toast.success("Reservation deleted");
     } catch (error) {
@@ -166,6 +185,23 @@ const AdminDashboard = () => {
               <button className="text-red-500 mt-2" onClick={() => handleDeleteReservation(reservation.id)}>
                 Delete
               </button>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Manage Reviews */}
+      <h2 className="text-xl font-semibold mt-6 mb-2">Manage Reviews</h2>
+      {loadingReviews ? (
+        <p>Loading reviews...</p>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {reviews.map((review) => (
+            <div key={review.id} className="p-4 border rounded-lg bg-gray-100">
+              <h3 className="text-lg font-bold">{review.restaurantName}</h3>
+              <p>Reviewer: {review.reviewerName}</p>
+              <p>Rating: {review.rating}</p>
+              <p>Comment: {review.comment}</p>
             </div>
           ))}
         </div>

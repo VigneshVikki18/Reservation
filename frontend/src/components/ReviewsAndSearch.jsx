@@ -23,6 +23,7 @@ export default function ReviewsAndSearch() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState({ cuisine: '', price: '', location: '', features: [] });
   const [showReservation, setShowReservation] = useState(false);
+  const navigate = useNavigate();
 
   const handleAddReview = async () => {
     if (selectedRestaurant && newReview.text) {
@@ -144,6 +145,8 @@ export default function ReviewsAndSearch() {
       )}
       
       {showReservation && <Login />}
+      
+      <button className="bg-red-500 text-black px-4 py-2 rounded mt-4" onClick={() => navigate('/admin')}>Admin Page</button>
     </div>
   );
 }

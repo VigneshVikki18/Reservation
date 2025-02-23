@@ -1,11 +1,12 @@
-const Review = require('../models/reviewModel');
+import { Review } from "../models/reviewModel.js";
 
 // Create a new review
-const createReview = async (req, res) => {
+ export const createReview = async (req, res) => {
   try {
-    console.log(req.body);
+    console.log("Hi" );
     const { text, rating, restaurantId } = req.body;
     const newReview = new Review({ text, rating, restaurantId });
+    console.log(newReview);
     await newReview.save(); // Use save() instead of create()
     res.status(201).json(newReview);
   } catch (error) {
@@ -14,7 +15,7 @@ const createReview = async (req, res) => {
 };
 
 // Get reviews for a specific restaurant
-const getReviews = async (req, res) => {
+export const getReviews = async (req, res) => {
   try {
     const { restaurantId } = req.params;
     const reviews = await Review.find({ restaurantId });
@@ -25,7 +26,7 @@ const getReviews = async (req, res) => {
 };
 
 // Update a review
-const updateReview = async (req, res) => {
+export const updateReview = async (req, res) => {
   try {
     const { reviewId } = req.params;
     const updatedReview = await Review.findByIdAndUpdate(reviewId, req.body, { new: true });
@@ -39,7 +40,7 @@ const updateReview = async (req, res) => {
 };
 
 // Delete a review
-const deleteReview = async (req, res) => {
+export const deleteReview = async (req, res) => {
   try {
     const { reviewId } = req.params;
     const deletedReview = await Review.findByIdAndDelete(reviewId);
@@ -52,9 +53,3 @@ const deleteReview = async (req, res) => {
   }
 };
 
-module.exports = {
-  createReview,
-  getReviews,
-  updateReview,
-  deleteReview,
-};
