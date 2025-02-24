@@ -6,14 +6,14 @@ import reservationRouter from "./routes/reservationRoute.js";
 import authRouter from "./routes/authRoute.js";
 import { dbConnection } from "./database/dbConnection.js";
 import reviewRoutes from './routes/reviewRoutes.js';
-import restaurantRoutes from './routes/restaurantRoutes.js';
+ import restaurantRoutes from './routes/restaurantRoutes.js';
 
 const app = express();
 dotenv.config();
 
 app.use(
   cors({
-    origin: "https://dhf7lc-5173.csb.app", // No trailing slash
+    origin: "https://dhf7lc-5173.csb.app",
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
@@ -22,7 +22,7 @@ app.use(
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-  app.use("/api/v1/restaurant", restaurantRoutes);
+ app.use("/api/v1/restaurant", restaurantRoutes);
 app.use("/api/v1/reservation", reservationRouter);
 app.use("/api/v1/auth", authRouter);
  app.use('/api/reviews', reviewRoutes);

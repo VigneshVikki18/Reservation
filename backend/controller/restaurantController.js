@@ -1,6 +1,4 @@
-
-import { Restaurant } from "../models/restaurant";
-
+import { Restaurant } from "../models/restaurant.js"; 
 export const addRestaurant = async (req, res) => {
   try {
     const { name, cuisine, price, location } = req.body;
@@ -12,7 +10,6 @@ export const addRestaurant = async (req, res) => {
   }
 };
 
-// Delete a restaurant by ID
 export const deleteRestaurant = async (req, res) => {
   try {
     const { id } = req.params;
@@ -26,7 +23,6 @@ export const deleteRestaurant = async (req, res) => {
   }
 };
 
-// Get all restaurants
 export const getAllRestaurants = async (req, res) => {
   try {
     const restaurants = await Restaurant.find();

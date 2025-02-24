@@ -123,8 +123,8 @@ export default function ReviewsAndSearch() {
   );
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-gray-50 min-h-screen">
-      <h1 className="text-3xl font-bold text-center mb-8 text-gray-800">Restaurant Reviews</h1>
+    <div className="max-w-4xl mx-auto p-6 bg-gray-50 min-h-screen w-full">
+      <h1 className="text-3xl font-bold text-center mb-8 text-black">Restaurant Reviews</h1>
 
       {/* Search Bar */}
       <div className="mb-8">
@@ -148,17 +148,17 @@ export default function ReviewsAndSearch() {
                 : 'border-gray-200 bg-white hover:shadow-lg hover:border-blue-200'}`}
             onClick={() => setSelectedRestaurant(restaurant)}
           >
-            <h3 className="text-lg font-semibold text-gray-800 mb-2">{restaurant.name}</h3>
-            <p className="text-sm text-gray-600">{restaurant.cuisine}</p>
+            <h3 className="text-lg font-semibold text-black mb-2">{restaurant.name}</h3>
+            <p className="text-sm text-black">{restaurant.cuisine}</p>
           </div>
         ))}
       </div>
 
       {selectedRestaurant && (
-        <div className="bg-white p-6 rounded-xl shadow-lg">
+        <div className="bg-white p-6 rounded-xl shadow-lg w-full">
           {/* Review Form */}
           <div className="mb-8">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">Leave a Review for {selectedRestaurant.name}</h2>
+            <h2 className="text-2xl font-bold text-black mb-4">Leave a Review for {selectedRestaurant.name}</h2>
             <textarea
               className="w-full p-4 border-2 border-gray-200 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500 h-32"
               value={newReview.text}
@@ -189,13 +189,13 @@ export default function ReviewsAndSearch() {
 
           {/* Reviews List */}
           <div>
-            <h3 className="text-xl font-bold text-gray-800 mb-6">Customer Reviews</h3>
+            <h3 className="text-xl font-bold text-black mb-6">Customer Reviews</h3>
             <div className="space-y-4">
               {reviews[selectedRestaurant.id]?.map(review => (
                 <div key={review._id} className="bg-gray-50 p-4 rounded-lg border border-gray-200">
                   <div className="flex justify-between items-start mb-2">
                     <div>
-                      <p className="text-gray-800 mb-2">{review.text}</p>
+                      <p className="text-black mb-2">{review.text}</p>
                       <div className="flex items-center gap-2">
                         <span className="text-yellow-400 text-lg">{'★'.repeat(review.rating)}</span>
                         <span className="text-gray-500 text-sm">{review.rating}/5</span>
@@ -257,6 +257,12 @@ export default function ReviewsAndSearch() {
         onClick={() => navigate('/admin')}
       >
         Admin Dashboard
+      </button>
+      <button
+        className="mt-8 px-6 py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition-colors w-full md:w-auto"
+        onClick={() => navigate('/Login')}
+      >
+        Login
       </button>
     </div>
   );
