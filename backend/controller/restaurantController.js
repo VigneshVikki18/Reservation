@@ -1,4 +1,5 @@
-import Restaurant from '../models/restaurantModel.js';
+
+import { Restaurant } from "../models/restaurant";
 
 export const addRestaurant = async (req, res) => {
   try {
@@ -7,28 +8,30 @@ export const addRestaurant = async (req, res) => {
     await newRestaurant.save();
     res.status(201).json({ restaurant: newRestaurant });
   } catch (error) {
-    res.status(500).json({ message: 'Failed to add restaurant', error: error.message });
+    res.status(500).json({ message: "Failed to add restaurant", error: error.message });
   }
 };
 
+// Delete a restaurant by ID
 export const deleteRestaurant = async (req, res) => {
   try {
     const { id } = req.params;
     const deletedRestaurant = await Restaurant.findByIdAndDelete(id);
     if (!deletedRestaurant) {
-      return res.status(404).json({ message: 'Restaurant not found' });
+      return res.status(404).json({ message: "Restaurant not found" });
     }
-    res.status(200).json({ message: 'Restaurant deleted successfully' });
+    res.status(200).json({ message: "Restaurant deleted successfully" });
   } catch (error) {
-    res.status(500).json({ message: 'Failed to delete restaurant', error: error.message });
+    res.status(500).json({ message: "Failed to delete restaurant", error: error.message });
   }
 };
 
+// Get all restaurants
 export const getAllRestaurants = async (req, res) => {
   try {
     const restaurants = await Restaurant.find();
     res.status(200).json({ restaurants });
   } catch (error) {
-    res.status(500).json({ message: 'Failed to fetch restaurants', error: error.message });
+    res.status(500).json({ message: "Failed to fetch restaurants", error: error.message });
   }
 };

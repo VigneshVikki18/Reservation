@@ -14,8 +14,11 @@ const reviewSchema = new mongoose.Schema({
   restaurantId: {
     type: Number,
     required: true,
-    
   },
+  ownerResponse: {
+    type: String,
+    default: 'Thank you for your feedback!'
+  }
 }, {
   timestamps: true,
 });

@@ -8,7 +8,12 @@ const AdminDashboard = () => {
 
   // State for Restaurants
   const [restaurants, setRestaurants] = useState([]);
-  const [newRestaurant, setNewRestaurant] = useState({ name: "", cuisine: "", price: "", location: "" });
+  const [newRestaurant, setNewRestaurant] = useState({
+    name: "",
+    cuisine: "",
+    price: "",
+    location: "",
+  });
   const [loadingRestaurants, setLoadingRestaurants] = useState(true);
 
   // State for Reservations
@@ -23,7 +28,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchRestaurants = async () => {
       try {
-        const { data } = await axios.get("http://localhost:5000/api/v1/restaurant/all");
+        const { data } = await axios.get("https://dhf7lc-5000.csb.app/api/v1/restaurant/all");
         setRestaurants(data.restaurants);
       } catch (error) {
         toast.error("Failed to fetch restaurants");
@@ -38,7 +43,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchReservations = async () => {
       try {
-        const { data } = await axios.get("http://localhost:5000/api/v1/reservation/all");
+        const { data } = await axios.get("https://dhf7lc-5000.csb.app/api/v1/reservation/all");
         setReservations(data.reservations);
       } catch (error) {
         toast.error("Failed to fetch reservations");
@@ -53,7 +58,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const { data } = await axios.get("http://localhost:5000/api/v1/review/all");
+        const { data } = await axios.get("https://dhf7lc-5000.csb.app/api/v1/review/all");
         setReviews(data.reviews);
       } catch (error) {
         toast.error("Failed to fetch reviews");
@@ -66,19 +71,19 @@ const AdminDashboard = () => {
 
   // Add New Restaurant (API Integration)
   const handleAddRestaurant = async () => {
-    if (!newRestaurant.name || !newRestaurant.cuisine) {
+    if (!newRestaurant.name || !newRestaurant.cuisine || !newRestaurant.price || !newRestaurant.location) {
       toast.error("Please fill in all required fields.");
       return;
     }
-    
+
     try {
       const { data } = await axios.post(
-        "http://localhost:5000/api/v1/restaurant/create",
+        "https://dhf7lc-5000.csb.app/api/v1/restaurant/create",
         newRestaurant,
         { headers: { "Content-Type": "application/json" } }
       );
       setRestaurants([...restaurants, data.restaurant]); // Add the new restaurant to the state
-      setNewRestaurant({ name: "", cuisine: "", price: "", location: "" });
+      setNewRestaurant({ name: "", cuisine: "", price: "", location: "" }); // Reset form
       toast.success("Restaurant added successfully");
     } catch (error) {
       toast.error("Failed to add restaurant");
@@ -88,8 +93,8 @@ const AdminDashboard = () => {
   // Delete a Restaurant (API Integration)
   const handleDeleteRestaurant = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/v1/restaurant/delete/${id}`);
-      setRestaurants(restaurants.filter((restaurant) => restaurant.id !== id));
+      await axios.delete(`https://dhf7lc-5000.csb.app/api/v1/restaurant/delete/${id}`);
+      setRestaurants(restaurants.filter((restaurant) => restaurant._id !== id)); // Remove deleted restaurant from state
       toast.success("Restaurant deleted");
     } catch (error) {
       toast.error("Failed to delete restaurant");
@@ -99,8 +104,8 @@ const AdminDashboard = () => {
   // Delete a Reservation (API Integration)
   const handleDeleteReservation = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/v1/reservation/delete/${id}`);
-      setReservations(reservations.filter((res) => res.id !== id));
+      await axios.delete(`https://dhf7lc-5000.csb.app/api/v1/reservation/delete/${id}`);
+      setReservations(reservations.filter((res) => res._id !== id)); // Remove deleted reservation from state
       toast.success("Reservation deleted");
     } catch (error) {
       toast.error("Failed to delete reservation");
@@ -108,14 +113,14 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 display: contents">
+    <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold text-center mb-4">Admin Dashboard</h1>
 
       {/* Add New Restaurant */}
       <div className="p-4 border rounded-lg mb-4">
         <h2 className="text-xl font-semibold mb-2">Add New Restaurant</h2>
         <input
-          type="text"
+          type=" text"
           placeholder="Name"
           className="w-full p-2 border rounded mb-2"
           value={newRestaurant.name}
@@ -142,7 +147,7 @@ const AdminDashboard = () => {
           value={newRestaurant.location}
           onChange={(e) => setNewRestaurant({ ...newRestaurant, location: e.target.value })}
         />
-        <button className="bg-blue-500 text-black px-4 py-2 rounded" onClick={handleAddRestaurant}>
+        <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={handleAddRestaurant}>
           Add Restaurant
         </button>
       </div>
@@ -154,12 +159,15 @@ const AdminDashboard = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {restaurants.map((restaurant) => (
-            <div key={restaurant.id} className="p-4 border rounded-lg bg-gray-100">
+            <div key={restaurant._id} className="p-4 border rounded-lg bg-gray-100">
               <h3 className="text-lg font-bold">{restaurant.name}</h3>
               <p>Cuisine: {restaurant.cuisine}</p>
               <p>Price: {restaurant.price}</p>
               <p>Location: {restaurant.location}</p>
-              <button className="text-red-500 mt-2" onClick={() => handleDeleteRestaurant(restaurant.id)}>
+              <button
+                className="text-red-500 mt-2"
+                onClick={() => handleDeleteRestaurant(restaurant._id)}
+              >
                 Delete
               </button>
             </div>
@@ -174,7 +182,7 @@ const AdminDashboard = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {reservations.map((reservation) => (
-            <div key={reservation.id} className="p-4 border rounded-lg bg-gray-100">
+            <div key={reservation._id} className="p-4 border rounded-lg bg-gray-100">
               <h3 className="text-lg font-bold">
                 {reservation.firstName} {reservation.lastName}
               </h3>
@@ -182,7 +190,10 @@ const AdminDashboard = () => {
               <p>Phone: {reservation.phone}</p>
               <p>Date: {reservation.date}</p>
               <p>Time: {reservation.time}</p>
-              <button className="text-red-500 mt-2" onClick={() => handleDeleteReservation(reservation.id)}>
+              <button
+                className="text-red-500 mt-2"
+                onClick={() => handleDeleteReservation(reservation._id)}
+              >
                 Delete
               </button>
             </div>
@@ -197,7 +208,7 @@ const AdminDashboard = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {reviews.map((review) => (
-            <div key={review.id} className="p-4 border rounded-lg bg-gray-100">
+            <div key={review._id} className="p-4 border rounded-lg bg-gray-100">
               <h3 className="text-lg font-bold">{review.restaurantName}</h3>
               <p>Reviewer: {review.reviewerName}</p>
               <p>Rating: {review.rating}</p>
