@@ -5,9 +5,9 @@ const Footer = () => {
     <footer>
       <div className="container">
         <div className="banner">
-          <div className="left">Meet & Meats</div>
+          <div className="left"></div>
           <div className="right">
-            <p>18, Salai Road, Dindigul, TamilNadu, TN.624001</p>
+            
             <p>Open: 03:00 PM - 12:00 AM</p>
           </div>
         </div>
