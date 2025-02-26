@@ -5,6 +5,12 @@ import mongoose from 'mongoose';
 export const createReview = async (req, res) => {
   try {
     const { text, rating, restaurantId } = req.body;
+
+    // Validate restaurantId as a valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(restaurantId)) {
+      return res.status(400).json({ message: 'Invalid restaurant ID format' });
+    }
+
     const newReview = new Review({ text, rating, restaurantId });
     await newReview.save();
     res.status(201).json(newReview);
@@ -17,7 +23,7 @@ export const createReview = async (req, res) => {
 export const getReviews = async (req, res) => {
   try {
     const { restaurantId } = req.params;
-    const reviews = await Review.find({ restaurantId: Number(restaurantId) });
+    const reviews = await Review.find({ restaurantId });
     res.status(200).json(reviews);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching reviews', error });
@@ -71,19 +77,16 @@ export const deleteReview = async (req, res) => {
   }
 };
 
+// Add owner response
 export const addOwnerResponse = async (req, res) => {
   try {
-
-    console.log("addOwnerResponse");
     const { reviewId } = req.params;
     const { response } = req.body;
 
-    // Validate the review ID format
     if (!mongoose.Types.ObjectId.isValid(reviewId)) {
       return res.status(400).json({ message: 'Invalid review ID format' });
     }
 
-    // Find the review by ID and update the owner response
     const updatedReview = await Review.findByIdAndUpdate(
       reviewId,
       { ownerResponse: response },

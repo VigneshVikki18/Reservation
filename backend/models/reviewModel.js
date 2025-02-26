@@ -12,7 +12,7 @@ const reviewSchema = new mongoose.Schema({
     max: 5,
   },
   restaurantId: {
-    type: Number,
+    type: mongoose.Schema.Types.ObjectId, // Use ObjectId instead of Number
     required: true,
   },
   ownerResponse: {

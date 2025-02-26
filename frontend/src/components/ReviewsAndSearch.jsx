@@ -2,16 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const restaurantsData = [
-  { id: 1, name: 'The Spicy Grill', cuisine: 'Indian', price: '$$', location: 'Downtown', features: ['outdoor seating', 'live music'] },
-  { id: 2, name: 'Ocean Breeze', cuisine: 'Seafood', price: '$$$', location: 'Beachfront', features: ['ocean view'] },
-  { id: 3, name: 'Mountain Delight', cuisine: 'Vegetarian', price: '$', location: 'Uptown', features: ['vegan options'] },
-  { id: 4, name: 'KFC', cuisine: 'Non-Veg', price: '$', location: 'Chennai', features: ['Non-vegan options'] },
-  { id: 5, name: 'McDonalds', cuisine: 'Veg,Non-Veg', price: '$', location: 'Madurai', features: ['Non-Veg options'] },
-  { id: 6, name: 'Dominos Pizza', cuisine: 'Non-Veg', price: '$', location: 'Comibatour', features: ['Non-vegan options'] },
-];
-
 export default function ReviewsAndSearch() {
+  const [restaurants, setRestaurants] = useState([]);
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
   const [reviews, setReviews] = useState({});
   const [newReview, setNewReview] = useState({ text: '', rating: 0 });
@@ -19,14 +11,32 @@ export default function ReviewsAndSearch() {
   const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
 
+  // Fetch restaurants from the backend
+  useEffect(() => {
+    axios.get('https://dhf7lc-5000.csb.app/api/v1/restaurant/all')
+      .then(response => {
+        console.log("API Response:", response.data); // Debugging
+        if (Array.isArray(response.data.restaurants)) {
+          setRestaurants(response.data.restaurants);
+        } else {
+          console.error("Unexpected API response format:", response.data);
+          setRestaurants([]); // Fallback to an empty array
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching restaurants:', error);
+        setRestaurants([]); // Fallback to an empty array
+      });
+  }, []);
+
   // Fetch reviews for the selected restaurant
   useEffect(() => {
     if (selectedRestaurant) {
-      axios.get(`https://dhf7lc-5000.csb.app/api/reviews/getreviews/${selectedRestaurant.id}`)
+      axios.get(`https://dhf7lc-5000.csb.app/api/reviews/getreviews/${selectedRestaurant._id}`)
         .then(response => {
           setReviews(prev => ({
             ...prev,
-            [selectedRestaurant.id]: response.data
+            [selectedRestaurant._id]: response.data
           }));
         })
         .catch(error => {
@@ -40,16 +50,16 @@ export default function ReviewsAndSearch() {
     if (selectedRestaurant && newReview.text) {
       try {
         const response = await axios.post('https://dhf7lc-5000.csb.app/api/reviews', {
-          restaurantId: selectedRestaurant.id,
+          restaurantId: selectedRestaurant._id, // Ensure this is a valid ObjectId
           text: newReview.text,
           rating: newReview.rating,
         });
 
         const addedReview = response.data;
-        const restaurantReviews = reviews[selectedRestaurant.id] || [];
+        const restaurantReviews = reviews[selectedRestaurant._id] || [];
         setReviews({
           ...reviews,
-          [selectedRestaurant.id]: [...restaurantReviews, addedReview],
+          [selectedRestaurant._id]: [...restaurantReviews, addedReview],
         });
         setNewReview({ text: '', rating: 0 });
       } catch (error) {
@@ -107,7 +117,7 @@ export default function ReviewsAndSearch() {
 
       setReviews(prev => ({
         ...prev,
-        [selectedRestaurant.id]: prev[selectedRestaurant.id].map(review => 
+        [selectedRestaurant._id]: prev[selectedRestaurant._id].map(review => 
           review._id === reviewId ? response.data : review
         )
       }));
@@ -118,9 +128,11 @@ export default function ReviewsAndSearch() {
   };
 
   // Filter restaurants based on search
-  const filteredRestaurants = restaurantsData.filter(restaurant =>
-    restaurant.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredRestaurants = Array.isArray(restaurants)
+    ? restaurants.filter(restaurant =>
+        restaurant.name.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : [];
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-gray-50 min-h-screen w-full">
@@ -141,9 +153,9 @@ export default function ReviewsAndSearch() {
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
         {filteredRestaurants.map(restaurant => (
           <div
-            key={restaurant.id}
+            key={restaurant._id}
             className={`p-4 border-2 rounded-xl cursor-pointer transition-all
-              ${selectedRestaurant?.id === restaurant.id 
+              ${selectedRestaurant?._id === restaurant._id 
                 ? 'border-blue-500 bg-blue-50 scale-105' 
                 : 'border-gray-200 bg-white hover:shadow-lg hover:border-blue-200'}`}
             onClick={() => setSelectedRestaurant(restaurant)}
@@ -191,7 +203,7 @@ export default function ReviewsAndSearch() {
           <div>
             <h3 className="text-xl font-bold text-black mb-6">Customer Reviews</h3>
             <div className="space-y-4">
-              {reviews[selectedRestaurant.id]?.map(review => (
+              {reviews[selectedRestaurant._id]?.map(review => (
                 <div key={review._id} className="bg-gray-50 p-4 rounded-lg border border-gray-200">
                   <div className="flex justify-between items-start mb-2">
                     <div>
@@ -212,8 +224,8 @@ export default function ReviewsAndSearch() {
                         className="text-blue-600 hover:text-blue-800 text-sm font-medium"
                         onClick={() =>
                           handleEditReview(
-                            selectedRestaurant.id,
-                            review._id,
+                            selectedRestaurant._id,
+                            review ._id,
                             prompt('Edit review:', review.text),
                             parseInt(prompt('Edit rating (1-5):', review.rating))
                           )
@@ -223,7 +235,7 @@ export default function ReviewsAndSearch() {
                       </button>
                       <button
                         className="text-red-600 hover:text-red-800 text-sm font-medium"
-                        onClick={() => handleDeleteReview(selectedRestaurant.id, review._id)}
+                        onClick={() => handleDeleteReview(selectedRestaurant._id, review._id)}
                       >
                         Delete
                       </button>
