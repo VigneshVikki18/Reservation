@@ -48,7 +48,7 @@ const Login = () => {
     <> 
       {!islogin ? (
         <div className={styles.container}>
-          <h2 className={styles.title}>Welcome to Meet & Meats</h2>
+          <h2 className={styles.title}>Welcome to Login</h2>
           <h2 className={styles.title}>Login</h2>
           {error && <p className={styles.error}>{error}</p>}
           <form onSubmit={handleSubmit} className={styles.form}>
