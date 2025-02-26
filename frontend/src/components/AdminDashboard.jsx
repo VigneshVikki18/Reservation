@@ -24,7 +24,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchRestaurants = async () => {
       try {
-        const { data } = await axios.get("https://dhf7lc-5000.csb.app/api/v1/restaurant/all");
+        const { data } = await axios.get("https://reservation-nbg6.onrender.com/api/v1/restaurant/all");
         setRestaurants(data.restaurants);
       } catch (error) {
         toast.error("Failed to fetch restaurants");
@@ -39,7 +39,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchReservations = async () => {
       try {
-        const { data } = await axios.get("https://dhf7lc-5000.csb.app/api/v1/reservation/all");
+        const { data } = await axios.get("https://reservation-nbg6.onrender.com/api/v1/reservation/all");
         setReservations(data.reservations);
       } catch (error) {
         toast.error("Failed to fetch reservations");
@@ -59,7 +59,7 @@ const AdminDashboard = () => {
 
     try {
       const { data } = await axios.post(
-        "https://dhf7lc-5000.csb.app/api/v1/restaurant/create",
+        "https://reservation-nbg6.onrender.com/api/v1/restaurant/create",
         newRestaurant,
         { headers: { "Content-Type": "application/json" } }
       );
@@ -74,7 +74,7 @@ const AdminDashboard = () => {
   // Delete a Restaurant (API Integration)
   const handleDeleteRestaurant = async (id) => {
     try {
-      await axios.delete(`https://dhf7lc-5000.csb.app/api/v1/restaurant/delete/${id}`);
+      await axios.delete(`https://reservation-nbg6.onrender.com/api/v1/restaurant/delete/${id}`);
       setRestaurants((prev) => prev.filter((restaurant) => restaurant._id !== id)); // Remove deleted restaurant from state
       toast.success("Restaurant deleted");
     } catch (error) {
@@ -85,7 +85,7 @@ const AdminDashboard = () => {
   // Delete a Reservation (API Integration)
   const handleDeleteReservation = async (id) => {
     try {
-      await axios.delete(`https://dhf7lc-5000.csb.app/api/v1/reservation/delete/${id}`);
+      await axios.delete(`https://reservation-nbg6.onrender.com/api/v1/reservation/delete/${id}`);
       setReservations((prev) => prev.filter((res) => res._id !== id)); // Remove deleted reservation from state
       toast.success("Reservation deleted");
     } catch (error) {
