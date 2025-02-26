@@ -13,7 +13,7 @@ export default function ReviewsAndSearch() {
 
   // Fetch restaurants from the backend
   useEffect(() => {
-    axios.get('https://dhf7lc-5000.csb.app/api/v1/restaurant/all')
+    axios.get('https://reservation-nbg6.onrender.com/api/v1/restaurant/all')
       .then(response => {
         console.log("API Response:", response.data); // Debugging
         if (Array.isArray(response.data.restaurants)) {
@@ -32,7 +32,7 @@ export default function ReviewsAndSearch() {
   // Fetch reviews for the selected restaurant
   useEffect(() => {
     if (selectedRestaurant) {
-      axios.get(`https://dhf7lc-5000.csb.app/api/reviews/getreviews/${selectedRestaurant._id}`)
+      axios.get(`https://reservation-nbg6.onrender.com/api/reviews/getreviews/${selectedRestaurant._id}`)
         .then(response => {
           setReviews(prev => ({
             ...prev,
@@ -49,7 +49,7 @@ export default function ReviewsAndSearch() {
   const handleAddReview = async () => {
     if (selectedRestaurant && newReview.text) {
       try {
-        const response = await axios.post('https://dhf7lc-5000.csb.app/api/reviews', {
+        const response = await axios.post('https://reservation-nbg6.onrender.com/api/reviews', {
           restaurantId: selectedRestaurant._id, // Ensure this is a valid ObjectId
           text: newReview.text,
           rating: newReview.rating,
@@ -74,7 +74,7 @@ export default function ReviewsAndSearch() {
 
     try {
       const response = await axios.put(
-        `https://dhf7lc-5000.csb.app/api/reviews/updateReview/${reviewId}`,
+        `https://reservation-nbg6.onrender.com/api/reviews/updateReview/${reviewId}`,
         { text: newText, rating: newRating }
       );
 
@@ -94,7 +94,7 @@ export default function ReviewsAndSearch() {
     if (!window.confirm('Are you sure you want to delete this review?')) return;
 
     try {
-      await axios.delete(`https://dhf7lc-5000.csb.app/api/reviews/deleteReview/${reviewId}`);
+      await axios.delete(`https://reservation-nbg6.onrender.com/api/reviews/deleteReview/${reviewId}`);
       
       setReviews(prev => ({
         ...prev,
@@ -111,7 +111,7 @@ export default function ReviewsAndSearch() {
 
     try {
       const response = await axios.put(
-        `https://dhf7lc-5000.csb.app/api/reviews/addOwnerResponse/${reviewId}`,
+        `https://reservation-nbg6.onrender.com/api/reviews/addOwnerResponse/${reviewId}`,
         { response: ownerResponse.text }
       );
 
@@ -192,7 +192,7 @@ export default function ReviewsAndSearch() {
             </div>
 
             <button
-              className="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+              className="px-6 py-3 bg-blue-600 text-black rounded-lg font-semibold hover:bg-blue-700 transition-colors"
               onClick={handleAddReview}
             >
               Submit Review
@@ -251,7 +251,7 @@ export default function ReviewsAndSearch() {
                       placeholder="Respond to this review..."
                     />
                     <button
-                      className="px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors"
+                      className="px-4 py-2 bg-green-600 text-black rounded-lg font-semibold hover:bg-green-700 transition-colors"
                       onClick={() => handleAddOwnerResponse(review._id)}
                     >
                       Submit Response
@@ -265,13 +265,13 @@ export default function ReviewsAndSearch() {
       )}
 
       <button
-        className="mt-8 px-6 py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition-colors w-full md:w-auto"
+        className="mt-8 px-6 py-3 bg-red-600 text-black rounded-lg font-semibold hover:bg-red-700 transition-colors w-full md:w-auto"
         onClick={() => navigate('/admin')}
       >
         Admin Dashboard
       </button>
       <button
-        className="mt-8 px-6 py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition-colors w-full md:w-auto"
+        className="mt-8 px-6 py-3 bg-red-600 text-black rounded-lg font-semibold hover:bg-red-700 transition-colors w-full md:w-auto"
         onClick={() => navigate('/Login')}
       >
         Login
