@@ -128,7 +128,7 @@ const AdminDashboard = () => {
           value={newRestaurant.location}
           onChange={(e) => setNewRestaurant({ ...newRestaurant, location: e.target.value })}
         />
-        <button className="bg-[#8b0000] text-white px-4 py-2 rounded" onClick={handleAddRestaurant}>
+        <button className="bg-[#8b0000] text-black px-4 py-2 rounded" onClick={handleAddRestaurant}>
           Add Restaurant
         </button>
       </div>
