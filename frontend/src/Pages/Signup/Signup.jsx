@@ -21,7 +21,7 @@ const Signup = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/api/v1/auth/signup", {
+      const response = await fetch("https://reservation-nbg6.onrender.com/api/v1/auth/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -49,6 +49,10 @@ const Signup = () => {
 
   return (
     <div className={styles.container}>
+<<<<<<< HEAD
+=======
+      <h2 className={styles.title}>Welcome to Signup</h2>
+>>>>>>> 0891b26e258078b2a79cbc3de73f65ea13edef4e
       <h2 className={styles.title}>Sign Up</h2>
       {error && <p className={styles.error}>{error}</p>}
       

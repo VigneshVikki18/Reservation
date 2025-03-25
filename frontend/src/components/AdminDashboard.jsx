@@ -24,7 +24,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchRestaurants = async () => {
       try {
-        const { data } = await axios.get("http://localhost:5000/api/v1/restaurant/all");
+        const { data } = await axios.get("https://reservation-nbg6.onrender.com/api/v1/restaurant/all");
         setRestaurants(data.restaurants);
       } catch (error) {
         toast.error("Failed to fetch restaurants");
@@ -39,7 +39,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchReservations = async () => {
       try {
-        const { data } = await axios.get("http://localhost:5000/api/v1/reservation/all");
+        const { data } = await axios.get("https://reservation-nbg6.onrender.com/api/v1/reservation/all");
         setReservations(data.reservations);
       } catch (error) {
         toast.error("Failed to fetch reservations");
@@ -59,7 +59,7 @@ const AdminDashboard = () => {
 
     try {
       const { data } = await axios.post(
-        "http://localhost:5000/api/v1/restaurant/create",
+        "https://reservation-nbg6.onrender.com/api/v1/restaurant/create",
         newRestaurant,
         { headers: { "Content-Type": "application/json" } }
       );
@@ -74,7 +74,11 @@ const AdminDashboard = () => {
   // Delete a Restaurant (API Integration)
   const handleDeleteRestaurant = async (id) => {
     try {
+<<<<<<< HEAD
       await axios.delete(`http://localhost:5000/api/v1/restaurant/delete/${id}`);
+=======
+      await axios.delete(`https://reservation-nbg6.onrender.com/api/v1/restaurant/delete/${id}`);
+>>>>>>> 0891b26e258078b2a79cbc3de73f65ea13edef4e
       setRestaurants((prev) => prev.filter((restaurant) => restaurant._id !== id)); // Remove deleted restaurant from state
       toast.success("Restaurant deleted");
     } catch (error) {
@@ -85,7 +89,11 @@ const AdminDashboard = () => {
   // Delete a Reservation (API Integration)
   const handleDeleteReservation = async (id) => {
     try {
+<<<<<<< HEAD
       await axios.delete(`http://localhost:5000/api/v1/reservation/delete/${id}`);
+=======
+      await axios.delete(`https://reservation-nbg6.onrender.com/api/v1/reservation/delete/${id}`);
+>>>>>>> 0891b26e258078b2a79cbc3de73f65ea13edef4e
       setReservations((prev) => prev.filter((res) => res._id !== id)); // Remove deleted reservation from state
       toast.success("Reservation deleted");
     } catch (error) {
@@ -94,11 +102,19 @@ const AdminDashboard = () => {
   };
 
   return (
+<<<<<<< HEAD
     <div className="w-screen h-screen bg-white"> {/* Light beige background */}
       <h1 className="text-3xl font-bold text-center mb-4 text-[#3e2723]">Admin Dashboard</h1> {/* Darker brown font */}
 
       {/* Add New Restaurant */}
       <div className="p-4 border rounded-lg mb-4 bg-[#89bff8] "> {/* Soft cream background for form */}
+=======
+    <div className="container mx-auto p-4 bg-[#f9f5e6]"> {/* Light beige background */}
+      <h1 className="text-3xl font-bold text-center mb-4 text-[#3e2723]">Admin Dashboard</h1> {/* Darker brown font */}
+
+      {/* Add New Restaurant */}
+      <div className="p-4 border rounded-lg mb-4 bg-[#CECECE]"> {/* Soft cream background for form */}
+>>>>>>> 0891b26e258078b2a79cbc3de73f65ea13edef4e
         <h2 className="text-2xl font-semibold mb-2 text-[#3e2723]">Add New Restaurant</h2>
         <input
           type="text"
@@ -140,13 +156,21 @@ const AdminDashboard = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {restaurants.map((restaurant) => (
+<<<<<<< HEAD
             <div key={restaurant._id} className="p-4 border rounded-lg bg-[#89bff8] text-[#a22800] "> {/* Soft cream background for cards */}
+=======
+            <div key={restaurant._id} className="p-4 border rounded-lg bg-[#CECECE]"> {/* Soft cream background for cards */}
+>>>>>>> 0891b26e258078b2a79cbc3de73f65ea13edef4e
               <h3 className="text-lg font-bold text-[#3e2723]">{restaurant.name}</h3>
               <p>Cuisine: {restaurant.cuisine}</p>
               <p>Price: {restaurant.price}</p>
               <p>Location: {restaurant.location}</p>
               <button
+<<<<<<< HEAD
                 className="text-red-500 mt-2  "
+=======
+                className="text-red-500 mt-2"
+>>>>>>> 0891b26e258078b2a79cbc3de73f65ea13edef4e
                 onClick={() => handleDeleteRestaurant(restaurant._id)}
               >
                 Delete
@@ -163,7 +187,11 @@ const AdminDashboard = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {reservations.map((reservation) => (
+<<<<<<< HEAD
             <div key={reservation._id} className="p-4 border rounded-lg bg-[#89bff8] text-[#a22800] "> {/* Soft cream background for cards */}
+=======
+            <div key={reservation._id} className="p-4 border rounded-lg bg-[#CECECE]"> {/* Soft cream background for cards */}
+>>>>>>> 0891b26e258078b2a79cbc3de73f65ea13edef4e
               <h3 className="text-lg font-bold text-[#3e2723]">
                 {reservation.firstName} {reservation.lastName}
               </h3>
