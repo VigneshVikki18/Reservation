@@ -1,13 +1,19 @@
-import { Review } from "../models/reviewModel.js";
+
+import { Review } from '../models/reviewModel.js';
+import mongoose from 'mongoose';
 
 // Create a new review
- export const createReview = async (req, res) => {
+export const createReview = async (req, res) => {
   try {
-    console.log("Hi" );
     const { text, rating, restaurantId } = req.body;
+
+    // Validate restaurantId as a valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(restaurantId)) {
+      return res.status(400).json({ message: 'Invalid restaurant ID format' });
+    }
+
     const newReview = new Review({ text, rating, restaurantId });
-    console.log(newReview);
-    await newReview.save(); // Use save() instead of create()
+    await newReview.save();
     res.status(201).json(newReview);
   } catch (error) {
     res.status(500).json({ message: 'Error creating review', error });
@@ -29,10 +35,22 @@ export const getReviews = async (req, res) => {
 export const updateReview = async (req, res) => {
   try {
     const { reviewId } = req.params;
-    const updatedReview = await Review.findByIdAndUpdate(reviewId, req.body, { new: true });
+    const { text, rating } = req.body;
+
+    if (!mongoose.Types.ObjectId.isValid(reviewId)) {
+      return res.status(400).json({ message: 'Invalid review ID format' });
+    }
+
+    const updatedReview = await Review.findByIdAndUpdate(
+      reviewId,
+      { text, rating },
+      { new: true }
+    );
+
     if (!updatedReview) {
       return res.status(404).json({ message: 'Review not found' });
     }
+
     res.status(200).json(updatedReview);
   } catch (error) {
     res.status(500).json({ message: 'Error updating review', error });
@@ -43,13 +61,45 @@ export const updateReview = async (req, res) => {
 export const deleteReview = async (req, res) => {
   try {
     const { reviewId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(reviewId)) {
+      return res.status(400).json({ message: 'Invalid review ID format' });
+    }
+
     const deletedReview = await Review.findByIdAndDelete(reviewId);
+
     if (!deletedReview) {
       return res.status(404).json({ message: 'Review not found' });
     }
+
     res.status(200).json({ message: 'Review deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Error deleting review', error });
   }
 };
 
+// Add owner response
+export const addOwnerResponse = async (req, res) => {
+  try {
+    const { reviewId } = req.params;
+    const { response } = req.body;
+
+    if (!mongoose.Types.ObjectId.isValid(reviewId)) {
+      return res.status(400).json({ message: 'Invalid review ID format' });
+    }
+
+    const updatedReview = await Review.findByIdAndUpdate(
+      reviewId,
+      { ownerResponse: response },
+      { new: true }
+    );
+
+    if (!updatedReview) {
+      return res.status(404).json({ message: 'Review not found' });
+    }
+
+    res.status(200).json(updatedReview);
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating owner response', error });
+  }
+};

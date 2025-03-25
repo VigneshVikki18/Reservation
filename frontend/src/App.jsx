@@ -8,6 +8,8 @@ import './App.css'
 import Login from './Pages/Login/Login';
 import Signup from './Pages/Signup/Signup';
 import AdminDashboard from './components/AdminDashboard';
+import Reservation from './components/Reservation'; 
+import Restaurant from './Pages/Restaurant/Restaurant';
 const App = () => {
   return (
     <>
@@ -18,6 +20,11 @@ const App = () => {
         <Route path="/signup" element={<Signup />} />
         <Route path='/success' element={<Success/>}/>
         <Route path='/admin' element={<AdminDashboard/>}/>
+
+        <Route path="/restaurant" element={<Restaurant/>} />
+
+        
+        
         <Route path='*' element={<NotFound/>}/> 
        
         </Routes>

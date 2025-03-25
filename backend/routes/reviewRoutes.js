@@ -1,18 +1,18 @@
-import express from "express"
-import { createReview, getReviews, updateReview, deleteReview } from '../controller/reviewController'
+import express from "express";
+import { 
+  createReview, 
+  getReviews, 
+  updateReview, 
+  deleteReview,
+  addOwnerResponse 
+} from '../controller/reviewController.js';
 
 const router = express.Router();
 
-// Route to create a new review 
 router.post('/', createReview);
+router.get('/getreviews/:restaurantId', getReviews);
+router.put('/updateReview/:reviewId', updateReview);
+router.delete('/deleteReview/:reviewId', deleteReview);
+router.put('/addOwnerResponse/:reviewId', addOwnerResponse);
 
-// Route to get all reviews for a specific restaurant
-router.get('/:restaurantId', getReviews);
-
-// Route to update a specific review
-router.put('/:reviewId', updateReview);
-
-// Route to delete a specific review
-router.delete('/:reviewId', deleteReview);
-
-module.exports = router;
+export default router;
