@@ -1,17 +1,10 @@
 {
   "name": "backend",
   "version": "1.0.0",
-<<<<<<< HEAD
-  "main": "index.js",
-  "type": "module",
-  "scripts": {
-    "start": "nodemon index.js",
-=======
   "main": "server.js",
   "type": "module",
   "scripts": {
     "start": "nodemon server.js",
->>>>>>> 0891b26e258078b2a79cbc3de73f65ea13edef4e
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

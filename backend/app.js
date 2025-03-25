@@ -13,7 +13,7 @@ dotenv.config();
 
 app.use(
   cors({
-    origin: "https://nimble-pavlova-906865.netlify.app",
+    origin: "http://localhost:5173",
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })

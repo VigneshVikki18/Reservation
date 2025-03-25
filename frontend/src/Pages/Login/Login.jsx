@@ -49,11 +49,7 @@ const Login = () => {
     <> 
       {!islogin ? (
         <div className={styles.container}>
-<<<<<<< HEAD
           <h2 className={styles.title}>Welcome to Restaurant Reservation</h2>
-=======
-          <h2 className={styles.title}>Welcome to Login</h2>
->>>>>>> 0891b26e258078b2a79cbc3de73f65ea13edef4e
           <h2 className={styles.title}>Login</h2>
           
           {error && <p className={styles.error}>{error}</p>}

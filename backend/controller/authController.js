@@ -3,7 +3,6 @@ import { User } from "../models/userModel.js";
 import { ErrorHandler } from "../utils/errorHandler.js";
 
 
-
 export const signup = async (req, res, next) => {
   try {
     const { email, password, typeofuser } = req.body;

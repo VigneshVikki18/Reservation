@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-
-=======
->>>>>>> 0891b26e258078b2a79cbc3de73f65ea13edef4e
 import { Review } from '../models/reviewModel.js';
 import mongoose from 'mongoose';
 
@@ -105,8 +101,4 @@ export const addOwnerResponse = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: 'Error updating owner response', error });
   }
-<<<<<<< HEAD
 };
-=======
-};
->>>>>>> 0891b26e258078b2a79cbc3de73f65ea13edef4e

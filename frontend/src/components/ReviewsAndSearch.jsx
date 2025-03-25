@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-<<<<<<< HEAD
 import { Link } from 'react-router-dom';
 
-=======
->>>>>>> 0891b26e258078b2a79cbc3de73f65ea13edef4e
 
 export default function ReviewsAndSearch() {
   const [restaurants, setRestaurants] = useState([]);
@@ -14,7 +11,6 @@ export default function ReviewsAndSearch() {
   const [newReview, setNewReview] = useState({ text: '', rating: 0 });
   const [ownerResponse, setOwnerResponse] = useState({ text: '', reviewId: null });
   const [searchQuery, setSearchQuery] = useState('');
-<<<<<<< HEAD
   const [userType, setUserType] = useState('');
   const navigate = useNavigate();
 
@@ -30,13 +26,6 @@ export default function ReviewsAndSearch() {
   // Fetch restaurants from the backend
   useEffect(() => {
     axios.get('http://localhost:5000/api/v1/restaurant/all')
-=======
-  const navigate = useNavigate();
-
-  // Fetch restaurants from the backend
-  useEffect(() => {
-    axios.get('https://reservation-nbg6.onrender.com/api/v1/restaurant/all')
->>>>>>> 0891b26e258078b2a79cbc3de73f65ea13edef4e
       .then(response => {
         console.log("API Response:", response.data); // Debugging
         if (Array.isArray(response.data.restaurants)) {
@@ -55,11 +44,7 @@ export default function ReviewsAndSearch() {
   // Fetch reviews for the selected restaurant
   useEffect(() => {
     if (selectedRestaurant) {
-<<<<<<< HEAD
       axios.get(`http://localhost:5000/api/reviews/getreviews/${selectedRestaurant._id}`)
-=======
-      axios.get(`https://reservation-nbg6.onrender.com/api/reviews/getreviews/${selectedRestaurant._id}`)
->>>>>>> 0891b26e258078b2a79cbc3de73f65ea13edef4e
         .then(response => {
           setReviews(prev => ({
             ...prev,
@@ -76,11 +61,7 @@ export default function ReviewsAndSearch() {
   const handleAddReview = async () => {
     if (selectedRestaurant && newReview.text) {
       try {
-<<<<<<< HEAD
         const response = await axios.post('http://localhost:5000/api/reviews', {
-=======
-        const response = await axios.post('https://reservation-nbg6.onrender.com/api/reviews', {
->>>>>>> 0891b26e258078b2a79cbc3de73f65ea13edef4e
           restaurantId: selectedRestaurant._id, // Ensure this is a valid ObjectId
           text: newReview.text,
           rating: newReview.rating,
@@ -105,11 +86,7 @@ export default function ReviewsAndSearch() {
 
     try {
       const response = await axios.put(
-<<<<<<< HEAD
         `http://localhost:5000/api/reviews/updateReview/${reviewId}`,
-=======
-        `https://reservation-nbg6.onrender.com/api/reviews/updateReview/${reviewId}`,
->>>>>>> 0891b26e258078b2a79cbc3de73f65ea13edef4e
         { text: newText, rating: newRating }
       );
 
@@ -129,11 +106,7 @@ export default function ReviewsAndSearch() {
     if (!window.confirm('Are you sure you want to delete this review?')) return;
 
     try {
-<<<<<<< HEAD
       await axios.delete(`http://localhost:5000/api/reviews/deleteReview/${reviewId}`);
-=======
-      await axios.delete(`https://reservation-nbg6.onrender.com/api/reviews/deleteReview/${reviewId}`);
->>>>>>> 0891b26e258078b2a79cbc3de73f65ea13edef4e
       
       setReviews(prev => ({
         ...prev,
@@ -150,11 +123,7 @@ export default function ReviewsAndSearch() {
 
     try {
       const response = await axios.put(
-<<<<<<< HEAD
         `http://localhost:5000/api/reviews/addOwnerResponse/${reviewId}`,
-=======
-        `https://reservation-nbg6.onrender.com/api/reviews/addOwnerResponse/${reviewId}`,
->>>>>>> 0891b26e258078b2a79cbc3de73f65ea13edef4e
         { response: ownerResponse.text }
       );
 
@@ -178,16 +147,11 @@ export default function ReviewsAndSearch() {
     : [];
 
   return (
-<<<<<<< HEAD
     <div className="w-screen h-screen bg-[#89bff8]">
-=======
-    <div className="max-w-4xl mx-auto p-6 bg-gray-50 min-h-screen w-full">
->>>>>>> 0891b26e258078b2a79cbc3de73f65ea13edef4e
       <h1 className="text-3xl font-bold text-center mb-8 text-black">Restaurant Reviews</h1>
 
       {/* Search Bar */}
       <div className="mb-8">
-<<<<<<< HEAD
   <input
     type="text"
     className="w-full p-4 text-lg border-2 border-black-300 rounded-lg placeholder-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
@@ -197,16 +161,6 @@ export default function ReviewsAndSearch() {
   />
    </div>
 
-=======
-        <input
-          type="text"
-          className="w-full p-4 text-lg border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-          placeholder="Search restaurants..."
-          value={searchQuery}
-          onChange={e => setSearchQuery(e.target.value)}
-        />
-      </div>
->>>>>>> 0891b26e258078b2a79cbc3de73f65ea13edef4e
 
       {/* Restaurant Grid */}
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
@@ -226,20 +180,12 @@ export default function ReviewsAndSearch() {
       </div>
 
       {selectedRestaurant && (
-<<<<<<< HEAD
         <div className="bg-blue p-6 rounded-xl shadow-lg w-full">
-=======
-        <div className="bg-white p-6 rounded-xl shadow-lg w-full">
->>>>>>> 0891b26e258078b2a79cbc3de73f65ea13edef4e
           {/* Review Form */}
           <div className="mb-8">
             <h2 className="text-2xl font-bold text-black mb-4">Leave a Review for {selectedRestaurant.name}</h2>
             <textarea
-<<<<<<< HEAD
               className="w-full p-4 text-lg border-2 border-black-300 rounded-lg placeholder-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-=======
-              className="w-full p-4 border-2 border-gray-200 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500 h-32"
->>>>>>> 0891b26e258078b2a79cbc3de73f65ea13edef4e
               value={newReview.text}
               onChange={e => setNewReview({ ...newReview, text: e.target.value })}
               placeholder="Share your experience..."
@@ -250,11 +196,7 @@ export default function ReviewsAndSearch() {
                 <button
                   key={star}
                   className={`text-3xl transition-transform hover:scale-125
-<<<<<<< HEAD
                     ${newReview.rating >= star ? 'text-yellow-400' : 'text-black-300'}`}
-=======
-                    ${newReview.rating >= star ? 'text-yellow-400' : 'text-gray-300'}`}
->>>>>>> 0891b26e258078b2a79cbc3de73f65ea13edef4e
                   onClick={() => setNewReview({ ...newReview, rating: star })}
                 >
                   ★
@@ -275,31 +217,18 @@ export default function ReviewsAndSearch() {
             <h3 className="text-xl font-bold text-black mb-6">Customer Reviews</h3>
             <div className="space-y-4">
               {reviews[selectedRestaurant._id]?.map(review => (
-<<<<<<< HEAD
                 <div key={review._id} className="bg-blue p-4 rounded-lg border border-gray-200">
                   <div className="flex justify-between items-start mb-2" >
-=======
-                <div key={review._id} className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                  <div className="flex justify-between items-start mb-2">
->>>>>>> 0891b26e258078b2a79cbc3de73f65ea13edef4e
                     <div>
                       <p className="text-black mb-2">{review.text}</p>
                       <div className="flex items-center gap-2">
                         <span className="text-yellow-400 text-lg">{'★'.repeat(review.rating)}</span>
-<<<<<<< HEAD
                         <span className="text-black-600 text-sm">{review.rating}/5</span>
-=======
-                        <span className="text-gray-500 text-sm">{review.rating}/5</span>
->>>>>>> 0891b26e258078b2a79cbc3de73f65ea13edef4e
                       </div>
                       {review.ownerResponse && (
                         <div className="mt-2">
                           <h4 className="font-semibold">Owner Response:</h4>
-<<<<<<< HEAD
                           <p className="text-black-600">{review.ownerResponse}</p>
-=======
-                          <p className="text-gray-600">{review.ownerResponse}</p>
->>>>>>> 0891b26e258078b2a79cbc3de73f65ea13edef4e
                         </div>
                       )}
                     </div>
@@ -329,11 +258,7 @@ export default function ReviewsAndSearch() {
                   {/* Owner Response Form */}
                   <div className="mt-4">
                     <textarea
-<<<<<<< HEAD
                       className="w-full p-4 text-lg border-2 border-black-300 rounded-lg placeholder-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-=======
-                      className="w-full p-2 border-2 border-gray-200 rounded-lg mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500 h-20"
->>>>>>> 0891b26e258078b2a79cbc3de73f65ea13edef4e
                       value={ownerResponse.reviewId === review._id ? ownerResponse.text : ''}
                       onChange={e => setOwnerResponse({ text: e.target.value, reviewId: review._id })}
                       placeholder="Respond to this review..."
@@ -361,26 +286,11 @@ export default function ReviewsAndSearch() {
           Admin Dashboard
         </button>
       )}
-<<<<<<< HEAD
       <button
         className="mt-8 px-6 py-3 bg-red-600 text-black rounded-lg font-semibold hover:bg-red-700 transition-colors w-full md:w-auto"
         onClick={() => navigate('/restaurant')}
       >
         Reservation
-=======
-
-      <button
-        className="mt-8 px-6 py-3 bg-red-600 text-black rounded-lg font-semibold hover:bg-red-700 transition-colors w-full md:w-auto"
-        onClick={() => navigate('/admin')}
-      >
-        Admin Dashboard
-      </button>
-      <button
-        className="mt-8 px-6 py-3 bg-red-600 text-black rounded-lg font-semibold hover:bg-red-700 transition-colors w-full md:w-auto"
-        onClick={() => navigate('/Login')}
-      >
-        Login
->>>>>>> 0891b26e258078b2a79cbc3de73f65ea13edef4e
       </button>
     </div>
   );
