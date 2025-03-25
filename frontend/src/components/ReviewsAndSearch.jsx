@@ -25,7 +25,7 @@ export default function ReviewsAndSearch() {
 
   // Fetch restaurants from the backend
   useEffect(() => {
-    axios.get('http://localhost:5000/api/v1/restaurant/all')
+    axios.get('https://reservation-nbg6.onrender.com/api/v1/restaurant/all')
       .then(response => {
         console.log("API Response:", response.data); // Debugging
         if (Array.isArray(response.data.restaurants)) {
@@ -44,7 +44,7 @@ export default function ReviewsAndSearch() {
   // Fetch reviews for the selected restaurant
   useEffect(() => {
     if (selectedRestaurant) {
-      axios.get(`http://localhost:5000/api/reviews/getreviews/${selectedRestaurant._id}`)
+      axios.get(`https://reservation-nbg6.onrender.com/api/reviews/getreviews/${selectedRestaurant._id}`)
         .then(response => {
           setReviews(prev => ({
             ...prev,
@@ -61,7 +61,7 @@ export default function ReviewsAndSearch() {
   const handleAddReview = async () => {
     if (selectedRestaurant && newReview.text) {
       try {
-        const response = await axios.post('http://localhost:5000/api/reviews', {
+        const response = await axios.post('https://reservation-nbg6.onrender.com/api/reviews', {
           restaurantId: selectedRestaurant._id, // Ensure this is a valid ObjectId
           text: newReview.text,
           rating: newReview.rating,
@@ -86,7 +86,7 @@ export default function ReviewsAndSearch() {
 
     try {
       const response = await axios.put(
-        `http://localhost:5000/api/reviews/updateReview/${reviewId}`,
+        `https://reservation-nbg6.onrender.com/api/reviews/updateReview/${reviewId}`,
         { text: newText, rating: newRating }
       );
 
@@ -106,7 +106,7 @@ export default function ReviewsAndSearch() {
     if (!window.confirm('Are you sure you want to delete this review?')) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/reviews/deleteReview/${reviewId}`);
+      await axios.delete(`https://reservation-nbg6.onrender.com/api/reviews/deleteReview/${reviewId}`);
       
       setReviews(prev => ({
         ...prev,
@@ -123,7 +123,7 @@ export default function ReviewsAndSearch() {
 
     try {
       const response = await axios.put(
-        `http://localhost:5000/api/reviews/addOwnerResponse/${reviewId}`,
+        `https://reservation-nbg6.onrender.com/api/reviews/addOwnerResponse/${reviewId}`,
         { response: ownerResponse.text }
       );
 
