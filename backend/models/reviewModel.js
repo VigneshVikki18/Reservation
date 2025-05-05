@@ -12,8 +12,14 @@ const reviewSchema = new mongoose.Schema({
     max: 5,
   },
   restaurantId: {
-    type: mongoose.Schema.Types.ObjectId, // Use ObjectId instead of Number
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Restaurant',  // Use ObjectId instead of Number
     required: true,
+  },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',  // ✅ Reference to User model for population
+    required: true
   },
   ownerResponse: {
     type: String,

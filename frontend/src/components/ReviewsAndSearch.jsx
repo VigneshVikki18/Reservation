@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import Cookies from 'js-cookie';
+
 
 
 export default function ReviewsAndSearch() {
@@ -10,13 +12,31 @@ export default function ReviewsAndSearch() {
   const [reviews, setReviews] = useState({});
   const [newReview, setNewReview] = useState({ text: '', rating: 0 });
   const [ownerResponse, setOwnerResponse] = useState({ text: '', reviewId: null });
+  const [hasReservation, setHasReservation] = useState(false);
+
   const [searchQuery, setSearchQuery] = useState('');
   const [userType, setUserType] = useState('');
+  const [userId, setUserId] = useState(''); 
+  
   const navigate = useNavigate();
 
-
+     // Fetch user type and ID from token/localStorage
+  useEffect(() => {
+    const token = Cookies.get('token');
+    if (token) {
+      const decoded = JSON.parse(atob(token.split('.')[1]));
+      setUserId(decoded.id);
+    }
+      // Ensure you pass the restaurant ID when navigating
+     const handleReservationNavigation = (restaurantId) => {
+      if (!restaurantId) {
+       console.error("Missing restaurant ID");
+       return;
+  }
+  navigate(`/reservation?restaurantId=${restaurantId}`);
+};
     // Fetch user type from localStorage
-    useEffect(() => {
+    
       const storedUserType = localStorage.getItem('typeofuser');
       if (storedUserType) {
         setUserType(storedUserType);
@@ -42,52 +62,101 @@ export default function ReviewsAndSearch() {
   }, []);
 
   // Fetch reviews for the selected restaurant
-  useEffect(() => {
-    if (selectedRestaurant) {
-      axios.get(`https://reservation-nbg6.onrender.com/api/reviews/getreviews/${selectedRestaurant._id}`)
-        .then(response => {
-          setReviews(prev => ({
-            ...prev,
-            [selectedRestaurant._id]: response.data
-          }));
-        })
-        .catch(error => {
-          console.error('Error fetching reviews:', error);
-        });
+  // Fetch reviews for the selected restaurant
+useEffect(() => {
+  if (selectedRestaurant && selectedRestaurant._id) {
+    axios.get(`https://reservation-nbg6.onrender.com/api/reviews/getreviews/${selectedRestaurant._id}`)
+      .then(response => {
+        setReviews(prev => ({
+          ...prev,
+          [selectedRestaurant._id]: response.data
+        }));
+      })
+      .catch(error => {
+        console.error('Error fetching reviews:', error);
+      });
+  }
+}, [selectedRestaurant]);
+  
+const checkReservation = async () => {
+  try {
+    const token = Cookies.get('token');
+    if (!token || !userId || !selectedRestaurant?._id) {
+      alert("Missing user or restaurant information.");
+      return;
     }
-  }, [selectedRestaurant]);
+
+    const response = await axios.get(
+      `https://reservation-nbg6.onrender.com/api/reviews/check-reservation/${selectedRestaurant._id}/${userId}`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    if (response.data.hasReservation) {
+      setHasReservation(true);
+    } else {
+      setHasReservation(false);
+      alert("You must make a reservation before reviewing.");
+    }
+  } catch (error) {
+    console.error("Reservation check failed:", error);
+    alert("Error checking reservation status.");
+  }
+};
+
+
 
   // Add a new review
   const handleAddReview = async () => {
-    if (selectedRestaurant && newReview.text) {
-      try {
-        const response = await axios.post('https://reservation-nbg6.onrender.com/api/reviews', {
-          restaurantId: selectedRestaurant._id, // Ensure this is a valid ObjectId
+    if (!selectedRestaurant || !newReview.text  || !hasReservation) return;
+  
+    if (!hasReservation) {
+      alert("You need to make a reservation before submitting a review.");
+      return;
+    }
+  
+    try {
+      const token = Cookies.get('token');
+      const response = await axios.post(
+        'https://reservation-nbg6.onrender.com/api/reviews',
+        {
+          restaurantId: selectedRestaurant._id,
           text: newReview.text,
           rating: newReview.rating,
-        });
-
-        const addedReview = response.data;
-        const restaurantReviews = reviews[selectedRestaurant._id] || [];
-        setReviews({
-          ...reviews,
-          [selectedRestaurant._id]: [...restaurantReviews, addedReview],
-        });
-        setNewReview({ text: '', rating: 0 });
-      } catch (error) {
-        console.error('Failed to add review:', error);
-      }
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+  
+      const addedReview = response.data;
+      setReviews(prev => ({
+        ...prev,
+        [selectedRestaurant._id]: [
+          ...(prev[selectedRestaurant._id] || []),
+          addedReview
+        ]
+      }));
+  
+      setNewReview({ text: '', rating: 0 });
+    } catch (error) {
+      console.error('Failed to add review:', error);
     }
   };
+  
+  
 
   // Edit review
   const handleEditReview = async (restaurantId, reviewId, newText, newRating) => {
-    if (!newText || !newRating) return;
-
+    const review = reviews[restaurantId].find(r => r._id === reviewId);
+    if (review.userId !== userId) 
+      {
+        alert("You can only edit your own review!");
+        return;
+      }
     try {
+      const token = Cookies.get('token');
       const response = await axios.put(
         `https://reservation-nbg6.onrender.com/api/reviews/updateReview/${reviewId}`,
-        { text: newText, rating: newRating }
+        { text: newText, rating: newRating },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
       setReviews(prev => ({
@@ -103,10 +172,18 @@ export default function ReviewsAndSearch() {
 
   // Delete review
   const handleDeleteReview = async (restaurantId, reviewId) => {
-    if (!window.confirm('Are you sure you want to delete this review?')) return;
-
+    const review = reviews[restaurantId].find(r => r._id === reviewId);
+    if (review.userId !== userId){
+      alert("You can only delete your own review!");
+    return;
+   }
+    
+   if (!window.confirm('Are you sure you want to delete this review?')) return;
     try {
-      await axios.delete(`https://reservation-nbg6.onrender.com/api/reviews/deleteReview/${reviewId}`);
+      const token = Cookies.get('token');
+      await axios.delete(`https://reservation-nbg6.onrender.com/api/reviews/deleteReview/${reviewId}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
       
       setReviews(prev => ({
         ...prev,
@@ -182,35 +259,56 @@ export default function ReviewsAndSearch() {
       {selectedRestaurant && (
         <div className="bg-blue p-6 rounded-xl shadow-lg w-full">
           {/* Review Form */}
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold text-black mb-4">Leave a Review for {selectedRestaurant.name}</h2>
-            <textarea
-              className="w-full p-4 text-lg border-2 border-black-300 rounded-lg placeholder-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-              value={newReview.text}
-              onChange={e => setNewReview({ ...newReview, text: e.target.value })}
-              placeholder="Share your experience..."
-            />
+  
+         {selectedRestaurant && (
+  <div className="mb-8">
+    {!hasReservation ? (
+      <>
+        <button
+          className="px-6 py-3 bg-green-600 text-black rounded-lg font-semibold hover:bg-green-700 transition-colors"
+          onClick={checkReservation}
+        >
+          Check Reservation & Leave a Review
+        </button>
+        <p className="text-red-600 font-bold mt-2">
+          You need to book a reservation before you can review this restaurant.
+        </p>
+      </>
+    ) : (
+      <div>
+        <h2 className="text-2xl font-bold text-black mb-4">Leave a Review for {selectedRestaurant.name}</h2>
+        <textarea
+          className="w-full p-4 text-lg border-2 border-black-300 rounded-lg placeholder-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+          value={newReview.text}
+          onChange={e => setNewReview({ ...newReview, text: e.target.value })}
+          placeholder="Share your experience..."
+        />
 
-            <div className="flex gap-2 mb-6">
-              {[1, 2, 3, 4, 5].map(star => (
-                <button
-                  key={star}
-                  className={`text-3xl transition-transform hover:scale-125
-                    ${newReview.rating >= star ? 'text-yellow-400' : 'text-black-300'}`}
-                  onClick={() => setNewReview({ ...newReview, rating: star })}
-                >
-                  ★
-                </button>
-              ))}
-            </div>
-
+        <div className="flex gap-2 mb-6 mt-2">
+          {[1, 2, 3, 4, 5].map(star => (
             <button
-              className="px-6 py-3 bg-blue-600 text-black rounded-lg font-semibold hover:bg-blue-700 transition-colors"
-              onClick={handleAddReview}
+              key={star}
+              className={`text-3xl transition-transform hover:scale-125 ${
+                newReview.rating >= star ? 'text-yellow-400' : 'text-black-300'
+              }`}
+              onClick={() => setNewReview({ ...newReview, rating: star })}
             >
-              Submit Review
+              ★
             </button>
-          </div>
+          ))}
+        </div>
+
+        <button
+          className="px-6 py-3 bg-blue-600 text-black rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+          onClick={handleAddReview}
+        >
+          Submit Review
+        </button>
+      </div>
+    )}
+  </div>
+)}
+
 
           {/* Reviews List */}
           <div>
@@ -233,43 +331,51 @@ export default function ReviewsAndSearch() {
                       )}
                     </div>
                     <div className="flex gap-2">
-                      <button
-                        className="text-blue-600 hover:text-blue-800 text-sm font-medium"
-                        onClick={() =>
-                          handleEditReview(
-                            selectedRestaurant._id,
-                            review ._id,
-                            prompt('Edit review:', review.text),
-                            parseInt(prompt('Edit rating (1-5):', review.rating))
-                          )
-                        }
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="text-red-600 hover:text-red-800 text-sm font-medium"
-                        onClick={() => handleDeleteReview(selectedRestaurant._id, review._id)}
-                      >
-                        Delete
-                      </button>
-                    </div>
+                      {review?.userId === userId && (
+                      <>
+                        <button
+                          className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                          onClick={() =>
+                           handleEditReview(
+                           selectedRestaurant._id,
+                            review._id,
+                           prompt('Edit review:', review.text),
+                           parseInt(prompt('Edit rating (1-5):', review.rating))
+                           )
+                         }
+                         >
+                          Edit
+                        </button>
+                        <button
+                         className="text-red-600 hover:text-red-800 text-sm font-medium"
+                         onClick={() => handleDeleteReview(selectedRestaurant._id, review._id)}
+                           >
+                           Delete
+                         </button>
+                          </>
+                           )}
+                         </div>
+
                   </div>
 
                   {/* Owner Response Form */}
+                  {(userType === 'owner' || userType === 'admin') && (
                   <div className="mt-4">
                     <textarea
-                      className="w-full p-4 text-lg border-2 border-black-300 rounded-lg placeholder-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                      className="w-full p-4 ..."
                       value={ownerResponse.reviewId === review._id ? ownerResponse.text : ''}
-                      onChange={e => setOwnerResponse({ text: e.target.value, reviewId: review._id })}
-                      placeholder="Respond to this review..."
+                     onChange={e => setOwnerResponse({ text: e.target.value, reviewId: review._id })}
+                       placeholder="Respond to this review..."
                     />
-                    <button
-                      className="px-4 py-2 bg-green-600 text-black rounded-lg font-semibold hover:bg-green-700 transition-colors"
+                     <button
+                     className="px-4 py-2 bg-green-600 ..."
                       onClick={() => handleAddOwnerResponse(review._id)}
-                    >
-                      Submit Response
-                    </button>
-                  </div>
+                     >
+                  Submit Response
+                  </button>
+                 </div>
+               )}
+
                 </div>
               ))}
             </div>
@@ -288,7 +394,14 @@ export default function ReviewsAndSearch() {
       )}
       <button
         className="mt-8 px-6 py-3 bg-red-600 text-black rounded-lg font-semibold hover:bg-red-700 transition-colors w-full md:w-auto"
-        onClick={() => navigate('/restaurant')}
+        onClick={() => {
+          if (selectedRestaurant) {
+            navigate('/restaurant', { state: { restaurantId: selectedRestaurant._id } });
+          } else {
+            alert("Please select a restaurant first.");
+          }
+        }}
+        
       >
         Reservation
       </button>

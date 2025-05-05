@@ -41,7 +41,9 @@ export const login = async (req, res, next) => {
     }
 
     const user = await User.findOne({ email }).select("+password");
+    const member = await User.findOne({ email });
 
+    console.log(member);
     if (!user) {
       return next(new ErrorHandler("Invalid email or password", 401));
     }
@@ -58,10 +60,11 @@ export const login = async (req, res, next) => {
     }
 
     const token = user.getJWTToken();
-
+    console.log(user);
     res.status(200).json({
       success: true,
       token,
+      user,
       typeofuser: user.typeofuser,
     });
   } catch (error) {

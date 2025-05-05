@@ -27,6 +27,7 @@ const Login = () => {
       });
 
       const data = await response.json();
+      localStorage.setItem("userId",data?.user?._id);
 
       if (response.ok) {
         // Store token and typeofuser in cookies and local storage
@@ -115,7 +116,38 @@ const Login = () => {
           </Link>
         </div>
       ) : (
-        <> 
+        
+        <>
+  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px', background: '#e0e0e0' }}>
+    <span>
+      Logged in as: <strong>{typeofuser}</strong>
+    </span>
+    <button
+      onClick={() => {
+        // Clear storage and redirect to login
+        Cookies.remove("token");
+        Cookies.remove("typeofuser");
+        localStorage.removeItem("token");
+        localStorage.removeItem("typeofuser");
+        localStorage.removeItem("userId");
+        setIslogin(false);
+        navigate('/login');
+      }}
+      style={{
+        padding: '6px 12px',
+        backgroundColor: '#ff4444',
+        color: 'white',
+        border: 'none',
+        borderRadius: '5px',
+        cursor: 'pointer'
+      }}
+    >
+      Logout
+    </button>
+  </div>
+
+ 
+
           {/* Display components after successful login */}
          <ReviewsAndSearch/>
         </>

@@ -2,6 +2,17 @@ import mongoose from "mongoose";
 import validator from "validator";
 
 const reservationSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: "User",
+  },
+  restaurantId: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: "Restaurant",
+  },
+
   firstName: {
     type: String,
     required: true,
@@ -14,6 +25,8 @@ const reservationSchema = new mongoose.Schema({
     minLength: [1, "Last name must be of at least 1 Characters."],
     maxLength: [30, "Last name cannot exceed 30 Characters."],
   },
+ 
+  
   date: {
     type: String,
     required: true,

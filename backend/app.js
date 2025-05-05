@@ -13,7 +13,7 @@ dotenv.config();
 
 app.use(
   cors({
-    origin: "https://storied-speculoos-8e6f18.netlify.app",
+    origin: "http://localhost:5173",
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
